@@ -25,9 +25,10 @@ document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{cat=b.dataset.
 $("telegram").href=TELEGRAM_URL;document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>$(b.dataset.close).close());
 async function refresh(){
 let githubItems=[{"id":"11227b0e-97ec-4252-a1b8-06431b235622","title":"Маска самурая","category":"Маски","collection":"Маска самурая","price":3000,"size":"18х10","description":"Боевая маска самурая","image":"images/catalog-e6e44c93-bd9a-4a59-9133-1f8cdc29bb51.jpg","gallery":["images/catalog-e6e44c93-bd9a-4a59-9133-1f8cdc29bb51.jpg","images/catalog-5f70f2b8-db69-404e-8885-59120746a5ac.jpg","images/catalog-dd4a7676-e3e7-4a27-8039-9c2f52a1ad9e.jpg","images/catalog-c6d72cc5-1d68-4766-8806-89af0d9b9f4f.jpg"],"available":true,"published":true}];
-try{const response=await fetch("./catalog-github.json?ts="+Date.now(),{cache:"no-store"});if(response.ok){const parsed=await response.json();if(Array.isArray(parsed))githubItems=parsed.filter(p=>p&&p.published!==false&&p.id&&p.title)}}catch(e){console.warn("GitHub catalog unavailable",e)}
+try{const response=await Promise.race([fetch("./catalog-github.json?ts="+Date.now(),{cache:"no-store"}),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Catalog timeout")),3500))]);if(response.ok){const parsed=await response.json();if(Array.isArray(parsed))githubItems=parsed.filter(p=>p&&p.published!==false&&p.id&&p.title)}}catch(e){console.warn("GitHub catalog unavailable",e)}
+items=[...seed,...githubItems];render();
 let supabaseItems=[];
-if(db){try{const {data,error}=await db.from("artworks").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});if(error)throw error;supabaseItems=(data||[]).filter(p=>p.published!==false)}catch(e){console.warn("Supabase catalog unavailable; showing GitHub catalog and local fallback",e)}}
+if(db){try{const {data,error}=await Promise.race([db.from("artworks").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false}),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Supabase timeout")),3500))]);if(error)throw error;supabaseItems=(data||[]).filter(p=>p.published!==false)}catch(e){console.warn("Supabase catalog unavailable; showing GitHub catalog and local fallback",e)}}
 const merged=new Map();
 for(const p of (supabaseItems.length?supabaseItems:seed))merged.set(String(p.id),p);
 for(const p of githubItems)merged.set(String(p.id),p);
