@@ -38,7 +38,7 @@ $("collectionSuggestions").innerHTML=[...new Set(items.map(p=>p.collection).filt
 }
 async function checkAdmin(){if(!db)return false;const {data:{user}}=await db.auth.getUser();if(!user)return false;const {data,error}=await db.from("admins").select("user_id").eq("user_id",user.id).maybeSingle();return !error&&!!data}
 async function showAuth(){authorized=await checkAdmin();$("login").classList.toggle("hidden",authorized);$("panel").classList.toggle("hidden",!authorized);if(authorized)await adminRender()}
-$("adminOpen").onclick=async()=>{$("admin").showModal();$("error").textContent="";$("setupNotice").classList.toggle("hidden",configured);if(configured)await showAuth()};
+$("adminOpen").onclick=()=>{window.location.href="./admin-dashboard.html"};
 $("loginBtn").onclick=async()=>{if(!db){$("error").textContent="Сначала настройте Supabase в config.js";return}$("loginBtn").disabled=true;try{const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await showAuth();if(!authorized){await db.auth.signOut();$("error").textContent="Этот аккаунт не назначен администратором."}}catch(e){$("error").textContent="Ошибка входа: "+errText(e)}finally{$("loginBtn").disabled=false}};
 $("password").onkeydown=e=>{if(e.key==="Enter")$("loginBtn").click()};
 $("logout").onclick=async()=>{await db.auth.signOut();authorized=false;$("panel").classList.add("hidden");$("login").classList.remove("hidden");reset();await refresh()};
