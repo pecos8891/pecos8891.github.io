@@ -16,5 +16,121 @@
     ],
     "available": true,
     "published": true
+  },
+  {
+    "id": "a2",
+    "title": "Лик из пепла",
+    "category": "Картины",
+    "price": 0,
+    "size": "Размер уточняется",
+    "description": "Авторское рельефное панно с объёмным фантастическим лицом, сложной фактурой и приглушённой древесно-земляной палитрой. Наличие, размеры и стоимость уточняйте в Telegram.",
+    "image": "images/shadow-face-main.jpg",
+    "gallery": [
+      "images/shadow-face-main.jpg",
+      "images/shadow-face-detail.jpg"
+    ],
+    "available": true,
+    "published": true
+  },
+  {
+    "id": "a3",
+    "title": "Дракон древних легенд",
+    "category": "Арт-объекты",
+    "price": 0,
+    "size": "Размер уточняется",
+    "description": "Объёмная авторская композиция с восточным драконом: фактурная чешуя, золотые акценты, выразительная голова и лапа, выходящая за границу рамы. Наличие, размеры и стоимость уточняйте в Telegram.",
+    "image": "images/dragon-main.jpg",
+    "gallery": [
+      "images/dragon-main.jpg",
+      "images/dragon-detail.jpg"
+    ],
+    "available": true,
+    "published": true
+  },
+  {
+    "id": "a1",
+    "title": "Mr. Gold",
+    "category": "Арт-объекты",
+    "price": 0,
+    "size": "Размер уточняется",
+    "description": "Авторская объёмная композиция в раме: скульптурный череп, театральная маска и выразительные золотые акценты. Оригинальная работа, представленная на фотографии. Наличие, размер и стоимость уточняйте в Telegram.",
+    "image": "images/mr-gold-art.jpg",
+    "available": true,
+    "gallery": [
+      "images/mr-gold-art.jpg"
+    ],
+    "published": true
+  },
+  {
+    "id": "m1",
+    "title": "Маска демона они",
+    "category": "Маски",
+    "price": 7000,
+    "size": "Уточняется",
+    "description": "Авторская маска с выразительным характером и ручной росписью. Напишите, чтобы уточнить наличие и доставку.",
+    "image": "",
+    "available": true,
+    "gallery": [],
+    "published": true
+  },
+  {
+    "id": "m2",
+    "title": "Маска самурая",
+    "category": "Маски",
+    "price": 6500,
+    "size": "Уточняется",
+    "description": "Декоративная маска с акцентом на форму и детали.",
+    "image": "",
+    "available": true,
+    "gallery": [],
+    "published": true
+  },
+  {
+    "id": "f1",
+    "title": "Орк-воин",
+    "category": "Фигурки",
+    "price": 8500,
+    "size": "16 × 12 см",
+    "description": "Фантастический персонаж с ручной росписью и высокой детализацией.",
+    "image": "",
+    "available": true,
+    "gallery": [],
+    "published": true
+  },
+  {
+    "id": "f2",
+    "title": "Орк-пират",
+    "category": "Фигурки",
+    "price": 8000,
+    "size": "Уточняется",
+    "description": "Авторская фигурка для коллекции любителя фэнтези.",
+    "image": "",
+    "available": true,
+    "gallery": [],
+    "published": true
+  },
+  {
+    "id": "s1",
+    "title": "Авторские шахматы",
+    "category": "Шахматы",
+    "price": 10000,
+    "size": "Уточняется",
+    "description": "Декоративный игровой объект. Уточните комплектацию в Telegram.",
+    "image": "",
+    "available": true,
+    "gallery": [],
+    "published": true
+  },
+  {
+    "id": "d1",
+    "title": "Арт-объект",
+    "category": "Декор",
+    "price": 5000,
+    "size": "Уточняется",
+    "description": "Декоративная работа ручного исполнения.",
+    "image": "",
+    "available": true,
+    "gallery": [],
+    "published": true
   }
 ]
