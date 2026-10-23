@@ -23,7 +23,18 @@ function render(){const availableCollections=[...new Set(items.filter(p=>cat==="
 function detail(id){const p=items.find(x=>x.id===id);if(!p)return;const url=TELEGRAM_URL+"?text="+encodeURIComponent("Здравствуйте! Интересует работа «"+p.title+"». Подскажите наличие и условия заказа.");$("detailContent").innerHTML=`<div class="detail-layout"><div class="detail-photos">${(p.gallery?.length?p.gallery:[p.image]).filter(Boolean).map((src,i)=>`<img src="${esc(src)}" alt="${esc(p.title)} — фото ${i+1}" loading="lazy">`).join("")||image(p)}</div><div><p class="eyebrow">${esc(p.category)}</p><h2>${esc(p.title)}</h2><p>${esc(p.description)}</p><p>${p.size?"Размер: "+esc(p.size):""}</p><h3>${money(p.price)}</h3><a class="button dark" href="${esc(url)}" target="_blank" rel="noopener">Уточнить в Telegram ↗</a></div></div>`;$("detail").showModal()}
 document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{cat=b.dataset.cat;collection="Все";document.querySelectorAll("[data-cat]").forEach(x=>x.classList.toggle("active",x===b));render()});
 $("telegram").href=TELEGRAM_URL;document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>$(b.dataset.close).close());
-async function refresh(){if(!db){render();return}const {data,error}=await db.from("artworks").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});if(error){console.error(error);$("empty").textContent="Не удалось загрузить каталог. Попробуйте обновить страницу.";return}items=data||[];render();$("collectionSuggestions").innerHTML=[...new Set(items.map(p=>p.collection).filter(Boolean))].map(c=>`<option value="${esc(c)}"></option>`).join("")}
+async function refresh(){
+let githubItems=[];
+try{const response=await fetch("./catalog-github.json?ts="+Date.now(),{cache:"no-store"});if(response.ok){const parsed=await response.json();if(Array.isArray(parsed))githubItems=parsed.filter(p=>p&&p.published!==false&&p.id&&p.title)}}catch(e){console.warn("GitHub catalog unavailable",e)}
+let supabaseItems=[];
+if(db){try{const {data,error}=await db.from("artworks").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});if(error)throw error;supabaseItems=(data||[]).filter(p=>p.published!==false)}catch(e){console.warn("Supabase catalog unavailable; showing GitHub catalog and local fallback",e)}}
+const merged=new Map();
+for(const p of (supabaseItems.length?supabaseItems:seed))merged.set(String(p.id),p);
+for(const p of githubItems)merged.set(String(p.id),p);
+items=[...merged.values()];
+render();
+$("collectionSuggestions").innerHTML=[...new Set(items.map(p=>p.collection).filter(Boolean))].map(c=>`<option value="${esc(c)}"></option>`).join("")
+}
 async function checkAdmin(){if(!db)return false;const {data:{user}}=await db.auth.getUser();if(!user)return false;const {data,error}=await db.from("admins").select("user_id").eq("user_id",user.id).maybeSingle();return !error&&!!data}
 async function showAuth(){authorized=await checkAdmin();$("login").classList.toggle("hidden",authorized);$("panel").classList.toggle("hidden",!authorized);if(authorized)await adminRender()}
 $("adminOpen").onclick=async()=>{$("admin").showModal();$("error").textContent="";$("setupNotice").classList.toggle("hidden",configured);if(configured)await showAuth()};
