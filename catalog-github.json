@@ -18,18 +18,6 @@
     "published": true
   },
   {
-    "id": "s1",
-    "title": "Авторские шахматы",
-    "category": "Шахматы",
-    "price": 10000,
-    "size": "Уточняется",
-    "description": "Декоративный игровой объект. Уточните комплектацию в Telegram.",
-    "image": "",
-    "available": true,
-    "gallery": [],
-    "published": true
-  },
-  {
     "id": "d1",
     "title": "Арт-объект",
     "category": "Декор",
