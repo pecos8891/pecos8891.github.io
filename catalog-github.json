@@ -18,18 +18,6 @@
     "published": true
   },
   {
-    "id": "d1",
-    "title": "Арт-объект",
-    "category": "Декор",
-    "price": 5000,
-    "size": "Уточняется",
-    "description": "Декоративная работа ручного исполнения.",
-    "image": "",
-    "available": true,
-    "gallery": [],
-    "published": true
-  },
-  {
     "id": "3e563773-6d50-44f1-9896-57c0dc45a134",
     "title": "Deus vulT",
     "category": "Картины",
