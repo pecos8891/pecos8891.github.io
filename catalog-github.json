@@ -18,20 +18,6 @@
     "published": true
   },
   {
-    "id": "a1",
-    "title": "Mr. Gold",
-    "category": "Арт-объекты",
-    "price": 0,
-    "size": "Размер уточняется",
-    "description": "Авторская объёмная композиция в раме: скульптурный череп, театральная маска и выразительные золотые акценты. Оригинальная работа, представленная на фотографии. Наличие, размер и стоимость уточняйте в Telegram.",
-    "image": "images/mr-gold-art.jpg",
-    "available": true,
-    "gallery": [
-      "images/mr-gold-art.jpg"
-    ],
-    "published": true
-  },
-  {
     "id": "m1",
     "title": "Маска демона они",
     "category": "Маски",
