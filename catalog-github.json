@@ -18,22 +18,6 @@
     "published": true
   },
   {
-    "id": "a2",
-    "title": "Лик из пепла",
-    "category": "Картины",
-    "price": 0,
-    "size": "Размер уточняется",
-    "description": "Авторское рельефное панно с объёмным фантастическим лицом, сложной фактурой и приглушённой древесно-земляной палитрой. Наличие, размеры и стоимость уточняйте в Telegram.",
-    "image": "images/shadow-face-main.jpg",
-    "gallery": [
-      "images/shadow-face-main.jpg",
-      "images/shadow-face-detail.jpg"
-    ],
-    "available": true,
-    "published": true,
-    "collection": ""
-  },
-  {
     "id": "a3",
     "title": "Дракон древних легенд",
     "category": "Арт-объекты",
