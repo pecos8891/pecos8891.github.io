@@ -153,18 +153,5 @@
     "gallery": [],
     "available": true,
     "published": false
-  },
-  {
-    "id": "b7c26192-3cf1-4a99-89f0-1f806e5146d8",
-    "title": "Орк",
-    "category": "Фигурки",
-    "collection": "Орки",
-    "price": 10,
-    "size": "",
-    "description": "",
-    "image": "",
-    "gallery": [],
-    "available": true,
-    "published": false
   }
 ]
