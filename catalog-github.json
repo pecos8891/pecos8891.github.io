@@ -18,22 +18,6 @@
     "published": true
   },
   {
-    "id": "a3",
-    "title": "Дракон древних легенд",
-    "category": "Арт-объекты",
-    "price": 0,
-    "size": "Размер уточняется",
-    "description": "Объёмная авторская композиция с восточным драконом: фактурная чешуя, золотые акценты, выразительная голова и лапа, выходящая за границу рамы. Наличие, размеры и стоимость уточняйте в Telegram.",
-    "image": "images/dragon-main.jpg",
-    "gallery": [
-      "images/dragon-main.jpg",
-      "images/dragon-detail.jpg"
-    ],
-    "available": true,
-    "published": true,
-    "collection": ""
-  },
-  {
     "id": "a1",
     "title": "Mr. Gold",
     "category": "Арт-объекты",
