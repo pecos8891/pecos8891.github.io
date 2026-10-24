@@ -17,7 +17,7 @@ const target=works[selected];
 if(!confirm("Удалить карточку «"+target.title+"» из основного каталога? Фотографии останутся."))return;
 const token=$("token").value.trim();
 if(!token){$("status").textContent="Введи токен GitHub.";return}
-if(prompt("Напиши УДАЛИТЬ для подтверждения")!=="УДАЛИТЬ")return;
+// Confirmation above is sufficient; mobile prompt keyboards often block deletion.
 $("deleteWork").disabled=true;
 try{
 const headers={Authorization:"Bearer "+token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};
@@ -29,8 +29,11 @@ const catalog=JSON.parse(decoded);
 const next=catalog.filter(x=>x.id!==target.id);
 if(next.length===catalog.length)throw Error("Карточка не найдена");
 const put=await fetch(api,{method:"PUT",headers:{...headers,"Content-Type":"application/json"},body:JSON.stringify({message:"Remove preview artwork",sha:file.sha,content:utf8base64(JSON.stringify(next,null,2)+"\n")})});
-if(!put.ok)throw Error("GitHub HTTP "+put.status);
-$("editor").hidden=true;$("loadStatus").textContent="Карточка удалена. Обнови страницу."; 
+if(!put.ok)throw Error("GitHub HTTP "+put.status+" "+(await put.text()).slice(0,220));
+works=next;selected=-1;
+$("workList").replaceChildren();
+works.forEach((w,i)=>{const b=document.createElement("button");b.type="button";b.className="work";if(w.image&&/^(images\\/|https:\\/\\/)/.test(w.image)){const img=document.createElement("img");img.src=w.image;img.alt="";b.append(img)}b.append(text("span",w.title+" · "+(Number(w.price)||0).toLocaleString("ru-RU")+" ₽"+(w.published===false?" · черновик":"")));b.onclick=()=>edit(i);$("workList").append(b)});
+$("editor").hidden=true;$("loadStatus").textContent="Карточка удалена из GitHub. Осталось работ: "+works.length+"."; 
 }catch(e){$("status").textContent="Ошибка: "+e.message}
 finally{$("deleteWork").disabled=false;$("token").value=""}
 };
