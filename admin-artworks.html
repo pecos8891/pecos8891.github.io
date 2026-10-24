@@ -32,7 +32,7 @@ const put=await fetch(api,{method:"PUT",headers:{...headers,"Content-Type":"appl
 if(!put.ok)throw Error("GitHub HTTP "+put.status+" "+(await put.text()).slice(0,220));
 works=next;selected=-1;
 $("workList").replaceChildren();
-works.forEach((w,i)=>{const b=document.createElement("button");b.type="button";b.className="work";if(w.image&&/^(images\\/|https:\\/\\/)/.test(w.image)){const img=document.createElement("img");img.src=w.image;img.alt="";b.append(img)}b.append(text("span",w.title+" · "+(Number(w.price)||0).toLocaleString("ru-RU")+" ₽"+(w.published===false?" · черновик":"")));b.onclick=()=>edit(i);$("workList").append(b)});
+works.forEach((w,i)=>{const b=document.createElement("button");b.type="button";b.className="work";if(w.image&&(w.image.startsWith("images/")||w.image.startsWith("https://"))){const img=document.createElement("img");img.src=w.image;img.alt="";b.append(img)}b.append(text("span",w.title+" · "+(Number(w.price)||0).toLocaleString("ru-RU")+" ₽"+(w.published===false?" · черновик":"")));b.onclick=()=>edit(i);$("workList").append(b)});
 $("editor").hidden=true;$("loadStatus").textContent="Карточка удалена из GitHub. Осталось работ: "+works.length+"."; 
 }catch(e){$("status").textContent="Ошибка: "+e.message}
 finally{$("deleteWork").disabled=false;$("token").value=""}
