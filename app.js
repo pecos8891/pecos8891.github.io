@@ -1,15 +1,6 @@
 // Данные редактируются только через Supabase Auth + RLS. Никаких паролей в исходном коде.
 const TELEGRAM_URL="https://t.me/CriptoWi";
-const seed = [
-{id:"a2",title:"Лик из пепла",category:"Картины",price:0,size:"Размер уточняется",description:"Авторское рельефное панно с объёмным фантастическим лицом, сложной фактурой и приглушённой древесно-земляной палитрой. Наличие, размеры и стоимость уточняйте в Telegram.",image:"images/shadow-face-main.jpg",gallery:["images/shadow-face-main.jpg","images/shadow-face-detail.jpg"],available:true},
-{id:"a3",title:"Дракон древних легенд",category:"Арт-объекты",price:0,size:"Размер уточняется",description:"Объёмная авторская композиция с восточным драконом: фактурная чешуя, золотые акценты, выразительная голова и лапа, выходящая за границу рамы. Наличие, размеры и стоимость уточняйте в Telegram.",image:"images/dragon-main.jpg",gallery:["images/dragon-main.jpg","images/dragon-detail.jpg"],available:true},
-{id:"a1",title:"Mr. Gold",category:"Арт-объекты",price:0,size:"Размер уточняется",description:"Авторская объёмная композиция в раме: скульптурный череп, театральная маска и выразительные золотые акценты. Оригинальная работа, представленная на фотографии. Наличие, размер и стоимость уточняйте в Telegram.",image:"images/mr-gold-art.jpg",available:true},
-{id:"m1",title:"Маска демона они",category:"Маски",price:7000,size:"Уточняется",description:"Авторская маска с выразительным характером и ручной росписью. Напишите, чтобы уточнить наличие и доставку.",image:"",available:true},
-{id:"m2",title:"Маска самурая",category:"Маски",price:6500,size:"Уточняется",description:"Декоративная маска с акцентом на форму и детали.",image:"",available:true},
-{id:"f1",title:"Орк-воин",category:"Фигурки",price:8500,size:"16 × 12 см",description:"Фантастический персонаж с ручной росписью и высокой детализацией.",image:"",available:true},
-{id:"f2",title:"Орк-пират",category:"Фигурки",price:8000,size:"Уточняется",description:"Авторская фигурка для коллекции любителя фэнтези.",image:"",available:true},
-{id:"s1",title:"Авторские шахматы",category:"Шахматы",price:10000,size:"Уточняется",description:"Декоративный игровой объект. Уточните комплектацию в Telegram.",image:"",available:true},
-{id:"d1",title:"Арт-объект",category:"Декор",price:5000,size:"Уточняется",description:"Декоративная работа ручного исполнения.",image:"",available:true}];
+const seed = [];
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -24,17 +15,23 @@ function detail(id){const p=items.find(x=>x.id===id);if(!p)return;const url=TELE
 document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{cat=b.dataset.cat;collection="Все";document.querySelectorAll("[data-cat]").forEach(x=>x.classList.toggle("active",x===b));render()});
 $("telegram").href=TELEGRAM_URL;document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>$(b.dataset.close).close());
 async function refresh(){
-let githubItems=[{"id":"11227b0e-97ec-4252-a1b8-06431b235622","title":"Маска самурая","category":"Маски","collection":"Маска самурая","price":3000,"size":"18х10","description":"Боевая маска самурая","image":"images/catalog-e6e44c93-bd9a-4a59-9133-1f8cdc29bb51.jpg","gallery":["images/catalog-e6e44c93-bd9a-4a59-9133-1f8cdc29bb51.jpg","images/catalog-5f70f2b8-db69-404e-8885-59120746a5ac.jpg","images/catalog-dd4a7676-e3e7-4a27-8039-9c2f52a1ad9e.jpg","images/catalog-c6d72cc5-1d68-4766-8806-89af0d9b9f4f.jpg"],"available":true,"published":true},{"id":"a2","title":"Лик из пепла","category":"Картины","price":0,"size":"Размер уточняется","description":"Авторское рельефное панно с объёмным фантастическим лицом, сложной фактурой и приглушённой древесно-земляной палитрой. Наличие, размеры и стоимость уточняйте в Telegram.","image":"images/shadow-face-main.jpg","gallery":["images/shadow-face-main.jpg","images/shadow-face-detail.jpg"],"available":true,"published":true},{"id":"a3","title":"Дракон древних легенд","category":"Арт-объекты","price":0,"size":"Размер уточняется","description":"Объёмная авторская композиция с восточным драконом: фактурная чешуя, золотые акценты, выразительная голова и лапа, выходящая за границу рамы. Наличие, размеры и стоимость уточняйте в Telegram.","image":"images/dragon-main.jpg","gallery":["images/dragon-main.jpg","images/dragon-detail.jpg"],"available":true,"published":true},{"id":"a1","title":"Mr. Gold","category":"Арт-объекты","price":0,"size":"Размер уточняется","description":"Авторская объёмная композиция в раме: скульптурный череп, театральная маска и выразительные золотые акценты. Оригинальная работа, представленная на фотографии. Наличие, размер и стоимость уточняйте в Telegram.","image":"images/mr-gold-art.jpg","available":true,"gallery":["images/mr-gold-art.jpg"],"published":true},{"id":"m1","title":"Маска демона они","category":"Маски","price":7000,"size":"Уточняется","description":"Авторская маска с выразительным характером и ручной росписью. Напишите, чтобы уточнить наличие и доставку.","image":"","available":true,"gallery":[],"published":true},{"id":"m2","title":"Маска самурая","category":"Маски","price":6500,"size":"Уточняется","description":"Декоративная маска с акцентом на форму и детали.","image":"","available":true,"gallery":[],"published":true},{"id":"f1","title":"Орк-воин","category":"Фигурки","price":8500,"size":"16 × 12 см","description":"Фантастический персонаж с ручной росписью и высокой детализацией.","image":"","available":true,"gallery":[],"published":true},{"id":"f2","title":"Орк-пират","category":"Фигурки","price":8000,"size":"Уточняется","description":"Авторская фигурка для коллекции любителя фэнтези.","image":"","available":true,"gallery":[],"published":true},{"id":"s1","title":"Авторские шахматы","category":"Шахматы","price":10000,"size":"Уточняется","description":"Декоративный игровой объект. Уточните комплектацию в Telegram.","image":"","available":true,"gallery":[],"published":true},{"id":"d1","title":"Арт-объект","category":"Декор","price":5000,"size":"Уточняется","description":"Декоративная работа ручного исполнения.","image":"","available":true,"gallery":[],"published":true}];
-try{const response=await Promise.race([fetch("./catalog-github.json?ts="+Date.now(),{cache:"no-store"}),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Catalog timeout")),3500))]);if(response.ok){const parsed=await response.json();if(Array.isArray(parsed))githubItems=parsed.filter(p=>p&&p.published!==false&&p.id&&p.title)}}catch(e){console.warn("GitHub catalog unavailable",e)}
-items=[...new Map([...seed,...githubItems].map(p=>[String(p.id),p])).values()];render();
-let supabaseItems=[];
-if(db){try{const {data,error}=await Promise.race([db.from("artworks").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false}),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Supabase timeout")),3500))]);if(error)throw error;supabaseItems=(data||[]).filter(p=>p.published!==false)}catch(e){console.warn("Supabase catalog unavailable; showing GitHub catalog and local fallback",e)}}
-const merged=new Map();
-for(const p of (supabaseItems.length?supabaseItems:seed))merged.set(String(p.id),p);
-for(const p of githubItems)merged.set(String(p.id),p);
-items=[...merged.values()];
+// GitHub catalog is authoritative. Do not merge old hardcoded cards or Supabase:
+ // removed or unpublished artworks must not reappear.
+try{
+  const response=await Promise.race([
+    fetch("./catalog-github.json?ts="+Date.now(),{cache:"no-store"}),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error("Catalog timeout")),8000))
+  ]);
+  if(!response.ok)throw new Error("HTTP "+response.status);
+  const parsed=await response.json();
+  if(!Array.isArray(parsed))throw new Error("Invalid catalog format");
+  items=parsed.filter(p=>p&&p.published!==false&&p.id&&p.title);
+}catch(e){
+  console.warn("GitHub catalog unavailable; do not restore deleted artworks from old fallbacks",e);
+  items=[];
+}
 render();
-$("collectionSuggestions").innerHTML=[...new Set(items.map(p=>p.collection).filter(Boolean))].map(c=>`<option value="${esc(c)}"></option>`).join("")
+$("collectionSuggestions").innerHTML=[...new Set(items.map(p=>p.collection).filter(Boolean))].map(c=>`<option value="${esc(c)}"></option>`).join("");
 }
 async function checkAdmin(){if(!db)return false;const {data:{user}}=await db.auth.getUser();if(!user)return false;const {data,error}=await db.from("admins").select("user_id").eq("user_id",user.id).maybeSingle();return !error&&!!data}
 async function showAuth(){authorized=await checkAdmin();$("login").classList.toggle("hidden",authorized);$("panel").classList.toggle("hidden",!authorized);if(authorized)await adminRender()}
