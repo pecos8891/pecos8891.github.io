@@ -30,7 +30,8 @@
       "images/shadow-face-detail.jpg"
     ],
     "available": true,
-    "published": true
+    "published": true,
+    "collection": ""
   },
   {
     "id": "a3",
