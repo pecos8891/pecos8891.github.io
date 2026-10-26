@@ -5,8 +5,85 @@ function text(tag,value){const e=document.createElement(tag);e.textContent=value
 function utf8base64(s){const bytes=new TextEncoder().encode(s);let result="";for(let i=0;i<bytes.length;i+=8192)result+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(result)}
 function renderPhotos(){const box=$("photoGallery");box.replaceChildren();galleryPaths.forEach((path,i)=>{const line=document.createElement("div");line.style.cssText="display:flex;align-items:center;gap:8px;margin:9px 0;flex-wrap:wrap";const img=document.createElement("img");img.src=path;img.alt="Фото "+(i+1);img.style.cssText="width:75px;height:75px;object-fit:cover;border-radius:6px";line.append(img);for(const [label,step] of [["↑",-1],["↓",1]]){const b=document.createElement("button");b.type="button";b.textContent=label;b.disabled=i+step<0||i+step>=galleryPaths.length;b.onclick=()=>{[galleryPaths[i],galleryPaths[i+step]]=[galleryPaths[i+step],galleryPaths[i]];renderPhotos()};line.append(b)}const remove=document.createElement("button");remove.type="button";remove.textContent="Убрать";remove.onclick=()=>{galleryPaths.splice(i,1);renderPhotos()};line.append(remove);if(i===0)line.append(text("span","Главное"));box.append(line)})}
 function resetPhotos(w){galleryPaths=[...new Set([...(Array.isArray(w.gallery)?w.gallery:[]),...(w.image?[w.image]:[])].filter(Boolean))];if(w.image&&galleryPaths.includes(w.image)){galleryPaths.splice(galleryPaths.indexOf(w.image),1);galleryPaths.unshift(w.image)}$("newPhotos").value="";$("photoStatus").textContent="";renderPhotos()}
-async function preparePhoto(file){if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw Error("Нужен JPG, PNG или WebP: "+file.name);const limit=2*1024*1024;if(file.size<=limit)return {bytes:new Uint8Array(await file.arrayBuffer()),ext:file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg"};const img=await createImageBitmap(file);try{let scale=Math.min(1,2000/Math.max(img.width,img.height));for(let attempt=0;attempt<7;attempt++){const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));const ctx=canvas.getContext("2d");if(!ctx)throw Error("Браузер не поддерживает сжатие");ctx.drawImage(img,0,0,canvas.width,canvas.height);const quality=Math.max(.55,.88-attempt*.06);const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",quality));if(!blob)throw Error("Не удалось сжать фото");if(blob.size<=limit)return {bytes:new Uint8Array(await blob.arrayBuffer()),ext:"jpg"};scale*=.78}throw Error("Не удалось уменьшить фото до 2 МБ: "+file.name)}finally{img.close()}}
-async function uploadNewPhotos(headers){const files=[...$("newPhotos").files];if(galleryPaths.length+files.length>6)throw Error("Максимум 6 фотографий в карточке");for(const file of files){$("photoStatus").textContent="Подготавливаем "+file.name+"…";const prepared=await preparePhoto(file);const bytes=prepared.bytes;let binary="";for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));const ext=prepared.ext;const name="images/catalog-"+crypto.randomUUID()+"."+ext;$("photoStatus").textContent="Загружаем "+file.name+"…";const url="https://api.github.com/repos/"+repo+"/contents/"+name;const response=await fetch(url,{method:"PUT",headers:{...headers,"Content-Type":"application/json"},body:JSON.stringify({message:"Add preview artwork photo",content:btoa(binary)})});if(!response.ok)throw Error("Ошибка загрузки фото: HTTP "+response.status);galleryPaths.push(name)}$("photoStatus").textContent=files.length?"Фотографии загружены. Сохраняем карточку…":""}
+async function decodePhoto(file){
+  const url=URL.createObjectURL(file);
+  try{
+    const img=new Image();
+    img.decoding="async";
+    img.src=url;
+    await new Promise((resolve,reject)=>{
+      if(img.complete){img.naturalWidth?resolve():reject(Error("Не удалось прочитать изображение"));return}
+      img.onload=resolve;
+      img.onerror=()=>reject(Error("Не удалось прочитать изображение"));
+    });
+    if(!img.naturalWidth||!img.naturalHeight)throw Error("Изображение пустое или повреждено");
+    return img;
+  }finally{URL.revokeObjectURL(url)}
+}
+async function preparePhoto(file){
+  const types=["image/jpeg","image/png","image/webp"];
+  if(!types.includes(file.type))throw Error("Нужен JPG, PNG или WebP: "+file.name);
+  const limit=1500*1024;
+  let img;
+  try{img=await decodePhoto(file)}
+  catch(e){throw Error("Не удалось открыть «"+file.name+"». Попробуй пересохранить фото в JPG или сделать скриншот. "+e.message)}
+  let scale=Math.min(1,1800/Math.max(img.naturalWidth,img.naturalHeight));
+  for(let attempt=0;attempt<9;attempt++){
+    const canvas=document.createElement("canvas");
+    canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+    canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    const ctx=canvas.getContext("2d");
+    if(!ctx)throw Error("Не удалось создать холст для обработки фото");
+    ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);
+    try{ctx.drawImage(img,0,0,canvas.width,canvas.height)}
+    catch(e){throw Error("Не удалось обработать «"+file.name+"»: "+e.message)}
+    const quality=Math.max(.48,.86-attempt*.045);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",quality));
+    if(!blob)throw Error("Браузер не смог преобразовать «"+file.name+"» в JPG");
+    if(blob.size<=limit)return {bytes:new Uint8Array(await blob.arrayBuffer()),ext:"jpg"};
+    scale*=.8;
+  }
+  throw Error("Не удалось уменьшить «"+file.name+"» до 1,5 МБ");
+}
+function bytesToBase64(bytes){
+  let binary="";
+  for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
+  return btoa(binary);
+}
+async function uploadNewPhotos(headers){
+  const files=[...$("newPhotos").files];
+  if(galleryPaths.length+files.length>6)throw Error("Максимум 6 фотографий в карточке");
+  for(let i=0;i<files.length;i++){
+    const file=files[i];
+    $("photoStatus").textContent="Подготавливаем фото "+(i+1)+" из "+files.length+": "+file.name+"…";
+    const prepared=await preparePhoto(file);
+    const name="images/catalog-"+crypto.randomUUID()+".jpg";
+    const url="https://api.github.com/repos/"+repo+"/contents/"+name;
+    let uploaded=false;
+    for(let attempt=1;attempt<=3;attempt++){
+      $("photoStatus").textContent="Загружаем фото "+(i+1)+" из "+files.length+" (попытка "+attempt+"/3)…";
+      let response;
+      try{
+        response=await fetch(url,{method:"PUT",headers:{...headers,"Content-Type":"application/json"},body:JSON.stringify({message:"Add artwork photo",content:bytesToBase64(prepared.bytes)})});
+      }catch(e){
+        if(attempt===3)throw Error("Нет соединения при загрузке «"+file.name+"». Проверь интернет и попробуй снова.");
+        await new Promise(r=>setTimeout(r,attempt*1200));continue;
+      }
+      if(response.ok){uploaded=true;break}
+      const details=await response.text();
+      if(![429,500,502,503,504].includes(response.status)||attempt===3){
+        throw Error("Не удалось загрузить «"+file.name+"»: GitHub HTTP "+response.status+". "+details.slice(0,170));
+      }
+      await new Promise(r=>setTimeout(r,attempt*1200));
+    }
+    if(!uploaded)throw Error("Не удалось загрузить «"+file.name+"»");
+    galleryPaths.push(name);
+    renderPhotos();
+    $("photoStatus").textContent="Загружено "+(i+1)+" из "+files.length+".";
+  }
+  $("newPhotos").value="";
+  $("photoStatus").textContent=files.length?"Фотографии загружены. Сохраняем карточку…":"";
+}
 async function load(){try{const r=await fetch("./catalog-github.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);works=await r.json();if(!Array.isArray(works))throw Error("Неверный формат каталога");$("loadStatus").textContent="Выбери работу для редактирования ("+works.length+").";for(let i=0;i<works.length;i++){const w=works[i];const b=document.createElement("button");b.type="button";b.className="work";if(w.image&&/^(images\/|https:\/\/)/.test(w.image)){const img=document.createElement("img");img.src=w.image;img.alt="";b.append(img)}const label=text("span",w.title+" · "+(Number(w.price)||0).toLocaleString("ru-RU")+" ₽");b.append(label);b.onclick=()=>edit(i);$("workList").append(b)}}catch(e){$("loadStatus").textContent="Ошибка загрузки: "+e.message}}
 $("addNew").onclick=()=>{selected=-2;$("editHeading").textContent="Новая работа";for(const key of ["title","collection","size","description"])$(key).value="";$("category").value="Маски";$("price").value="0";$("available").checked=true;$("published").checked=false;resetPhotos({});$("photo").hidden=true;$("hideWork").hidden=true;$("deleteWork").hidden=true;$("editor").hidden=false;$("status").textContent="Новая карточка будет сохранена как черновик. Фото можно будет добавить позже.";$("editor").scrollIntoView({behavior:"smooth"})};
 function edit(i){selected=i;$("editHeading").textContent="Редактирование карточки";$("hideWork").hidden=false;$("deleteWork").hidden=false;const w=works[i];for(const key of ["title","category","collection","price","size","description"])$(key).value=w[key]??"";$("available").checked=w.available!==false;$("published").checked=w.published!==false;resetPhotos(w);const img=$("photo");img.hidden=true;if(w.image)img.src=w.image;$("editor").hidden=false;$("status").textContent="";$("editor").scrollIntoView({behavior:"smooth"})}
