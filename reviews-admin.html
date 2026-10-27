@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Управление отзывами | PM Dark Artifacts</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#151517;color:#eee5d7;font:16px/1.55 system-ui,sans-serif}main{max-width:850px;margin:auto;padding:34px 18px 80px}h1{font:clamp(30px,6vw,49px) Georgia,serif;color:#e2c7a0;margin:12px 0}h2{font:26px Georgia,serif;color:#e2c7a0}a{color:#d7b789}p{color:#c7beb2}.eyebrow{letter-spacing:.25em;font-size:12px;color:#c6a36f}section,.review{border:1px solid #65513b;border-radius:12px;background:#211f20;padding:22px;margin:20px 0}label{display:block;margin:15px 0}input{display:block;width:100%;padding:13px;background:#302b2a;color:white;border:1px solid #7b674e;border-radius:8px;font:inherit;margin-top:6px}button{background:#c7a77b;color:#191514;border:0;border-radius:8px;padding:12px 18px;font:inherit;font-weight:650;cursor:pointer;margin:8px 8px 8px 0}button:disabled{opacity:.5;cursor:wait}.danger{background:#9c4942;color:white}.secondary{background:#40362e;color:#f2e3d2}.stars{color:#d7b36c;font-size:22px;letter-spacing:3px}.date{font-size:13px;color:#a99b8c}#status{white-space:pre-wrap} [hidden]{display:none!important}
+</style></head><body><main><p class="eyebrow">PM | PAVEL DARK ARTIFACTS</p><h1>Управление отзывами</h1><p><a href="./#reviews">← Вернуться на сайт</a></p>
+<section id="login"><h2>Вход администратора</h2><p>Введи email и пароль созданной учётной записи Firebase.</p><form id="login-form"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>Пароль<input id="password" type="password" autocomplete="current-password" required></label><button id="login-btn">Войти</button></form></section>
+<section id="panel" hidden><h2>Отзывы покупателей</h2><p>Удаление необратимо. Публикация отзывов покупателями продолжает работать независимо от этой страницы.</p><button class="secondary" id="reload" type="button">Обновить список</button><button class="secondary" id="logout" type="button">Выйти</button><div id="reviews"></div></section>
+<p id="status" role="status" aria-live="polite"></p></main>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import{getFirestore,collection,getDocs,query,limit,doc,deleteDoc}from"https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCOZXpnkgJdATABb6kuVWGF6j3OunHLI78",authDomain:"pm-dark-artifacts.firebaseapp.com",projectId:"pm-dark-artifacts",appId:"1:467232570292:web:8c5551e5a786a87c8510e1"});
+const auth=getAuth(app),db=getFirestore(app),ADMIN_UID="d6M2bZJxpLfjRqkUEZPf972s0md2";
+const el=id=>document.getElementById(id),status=message=>el("status").textContent=message;
+async function loadReviews(){
+ status("Загружаем отзывы…");const root=el("reviews");root.replaceChildren();
+ try{
+ const snap=await getDocs(query(collection(db,"reviews"),limit(150)));
+ const items=snap.docs.filter(d=>d.data().name&&d.data().text).sort((a,b)=>(b.data().created_at?.seconds||0)-(a.data().created_at?.seconds||0));
+ if(!items.length){status("Отзывов пока нет.");return}
+ status("Найдено отзывов: "+items.length);
+ for(const entry of items){
+ const d=entry.data(),box=document.createElement("article");box.className="review";
+ const stars=document.createElement("div");stars.className="stars";stars.textContent="★".repeat(Math.max(1,Math.min(5,Number(d.rating)||5)));
+ const author=document.createElement("strong");author.textContent=d.name+" · "+(d.artwork||"Авторская работа");
+ const body=document.createElement("p");body.textContent=d.text;body.style.whiteSpace="pre-wrap";
+ const date=document.createElement("p");date.className="date";date.textContent=d.created_at?.toDate?.().toLocaleDateString("ru-RU")||"Дата неизвестна";
+ const button=document.createElement("button");button.className="danger";button.textContent="Удалить отзыв";button.type="button";
+ button.onclick=async()=>{if(!confirm("Удалить отзыв от «"+d.name+"»? Это действие нельзя отменить."))return;button.disabled=true;try{await deleteDoc(doc(db,"reviews",entry.id));box.remove();status("Отзыв удалён. На сайте он исчезнет после обновления страницы.")}catch(e){status("Ошибка удаления: "+e.message);button.disabled=false}};
+ box.append(stars,author,body,date,button);root.append(box);
+ }
+ }catch(e){status("Не удалось загрузить отзывы: "+e.message)}
+}
+onAuthStateChanged(auth,async user=>{
+ const ok=!!user&&user.uid===ADMIN_UID;el("login").hidden=ok;el("panel").hidden=!ok;
+ if(user&&!ok){status("У этой учётной записи нет прав администратора.");await signOut(auth);return}
+ if(ok){status("Вход выполнен.");await loadReviews()}else if(!user){status("")}
+});
+el("login-form").onsubmit=async e=>{e.preventDefault();const btn=el("login-btn");btn.disabled=true;status("Проверяем вход…");try{await signInWithEmailAndPassword(auth,el("email").value.trim(),el("password").value);el("password").value=""}catch(e){status("Ошибка входа: проверь email и пароль. Код: "+e.code)}finally{btn.disabled=false}};
+el("reload").onclick=loadReviews;el("logout").onclick=()=>signOut(auth);
+</script></body></html>
