@@ -5,10 +5,10 @@ const max="https://max.ru/u/f9LHodD0cOKMQiGT25vi2PJVlsUYnlIQKWIL05nfoQ5C6WfHNeq9
 const css=document.createElement("style");
 css.textContent=`.pm-section{padding:65px clamp(18px,6vw,95px);background:#151517;color:#e8e2d8}.pm-inner{max-width:1120px;margin:auto}.pm-section h2,.pm-modal h2{font:clamp(27px,4vw,44px) Georgia,serif;color:#dac8ae}.pm-card{border:1px solid #554636;background:#201f21;padding:23px;border-radius:12px}.pm-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}.pm-muted{color:#bdb5aa;line-height:1.6}.pm-modal{background:#19181a;color:#f1e9dd;border:1px solid #7b6247;border-radius:12px;max-width:560px;width:calc(100% - 28px);padding:28px;max-height:90vh;overflow:auto}.pm-modal::backdrop{background:#000b}.pm-modal label{display:block;margin:15px 0;color:#e3d2ba}.pm-modal input,.pm-modal select,.pm-modal textarea{width:100%;display:block;margin-top:7px;background:#282629;color:white;border:1px solid #70604a;border-radius:7px;padding:12px;font:inherit;box-sizing:border-box}.pm-modal textarea{min-height:100px}.pm-modal button,.pm-review-btn{display:inline-block;margin:7px 6px 7px 0;padding:13px 17px;background:#bba076;color:#161313;border:0;border-radius:7px;font-weight:700;cursor:pointer;font:inherit}.pm-modal .pm-close{float:right;background:#393235;color:#fff}.pm-note{font-size:13px;color:#d1c0a8;line-height:1.5}.pm-review{border-bottom:1px solid #514332;padding:14px 0}.pm-review p{white-space:pre-wrap}.pm-order-trigger{margin-top:12px}.pm-section .eyebrow{color:#bfa376}`;
 document.head.append(css);
-const mount=document.createElement("section");mount.className="pm-section";mount.id="reviews";mount.innerHTML=`<div class="pm-inner"><p class="eyebrow">ОТЗЫВЫ ПОКУПАТЕЛЕЙ</p><h2>Голоса коллекционеров</h2><p class="pm-muted">Реальные впечатления покупателей. Отзывы появляются только после проверки автором.</p><div id="pm-review-list" class="pm-columns"></div><button id="pm-review-open" class="pm-review-btn" type="button">Оставить отзыв ↗</button></div>`;
+const mount=document.createElement("section");mount.className="pm-section";mount.id="reviews";mount.innerHTML=`<div class="pm-inner"><p class="eyebrow">ОТЗЫВЫ ПОКУПАТЕЛЕЙ</p><h2>Голоса коллекционеров</h2><p class="pm-muted">Впечатления коллекционеров. Отзывы публикуются автоматически после отправки.</p><div id="pm-review-list" class="pm-columns"></div><button id="pm-review-open" class="pm-review-btn" type="button">Оставить отзыв ↗</button></div>`;
 const contact=document.getElementById("contact");contact?.parentNode.insertBefore(mount,contact);
 const order=document.createElement("dialog");order.className="pm-modal";order.id="pm-order";order.innerHTML=`<button class="pm-close" type="button" data-close-pm="pm-order">Закрыть ×</button><p class="eyebrow">PAVEL DARK ARTIFACTS</p><h2>Оформить заказ</h2><p class="pm-muted">Заполните заявку и выберите удобный мессенджер. Отправка произойдёт только после вашего подтверждения в приложении.</p><form id="pm-order-form"><label>Работа<input id="pm-order-art" maxlength="120" required></label><label>Ваше имя<input id="pm-order-name" maxlength="80" required></label><label>Город доставки<input id="pm-order-city" maxlength="100" required></label><label>Контакт для ответа<input id="pm-order-contact" maxlength="120" required></label><label>Комментарий<textarea id="pm-order-note" maxlength="600"></textarea></label><label>Куда отправить<select id="pm-order-channel"><option value="telegram">Telegram</option><option value="whatsapp">WhatsApp</option><option value="max">MAX</option></select></label><button type="submit">Продолжить в мессенджере ↗</button><p id="pm-order-status" class="pm-note" role="status"></p></form></dialog>`;
-const review=document.createElement("dialog");review.className="pm-modal";review.id="pm-review-dialog";review.innerHTML=`<button class="pm-close" type="button" data-close-pm="pm-review-dialog">Закрыть ×</button><h2>Оставить отзыв</h2><p class="pm-muted">Отправьте отзыв автору для проверки. После подтверждения он сможет разместить его на сайте.</p><form id="pm-review-form"><label>Как вас представить<input id="pm-review-name" maxlength="70" required></label><label>Название приобретённой работы<input id="pm-review-art" maxlength="120" required></label><label>Оценка<select id="pm-review-rating"><option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option></select></label><label>Ваш отзыв<textarea id="pm-review-text" maxlength="1200" required></textarea></label><label>Отправить через<select id="pm-review-channel"><option value="telegram">Telegram</option><option value="whatsapp">WhatsApp</option><option value="max">MAX</option></select></label><button type="submit">Отправить на проверку ↗</button><p id="pm-review-status" class="pm-note" role="status"></p></form></dialog>`;
+const review=document.createElement("dialog");review.className="pm-modal";review.id="pm-review-dialog";review.innerHTML=`<button class="pm-close" type="button" data-close-pm="pm-review-dialog">Закрыть ×</button><h2>Оставить отзыв</h2><p class="pm-muted">Поделитесь впечатлением — отзыв появится на сайте автоматически. Пожалуйста, не указывайте личные контакты.</p><form id="pm-review-form"><label>Как вас представить<input id="pm-review-name" maxlength="70" required></label><label>Название приобретённой работы<input id="pm-review-art" maxlength="120" required></label><label>Оценка<select id="pm-review-rating"><option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option></select></label><label>Ваш отзыв<textarea id="pm-review-text" maxlength="1200" required></textarea></label><label style="position:absolute;left:-9999px" aria-hidden="true">Сайт<input id="pm-review-website" tabindex="-1" autocomplete="off"></label><button type="submit" id="pm-review-submit">Опубликовать отзыв ↗</button><p id="pm-review-status" class="pm-note" role="status"></p></form></dialog>`;
 document.body.append(order,review);
 function byId(id){return document.getElementById(id)}
 document.querySelectorAll("[data-close-pm]").forEach(b=>b.onclick=()=>byId(b.dataset.closePm).close());
@@ -26,7 +26,53 @@ async function deliver(message,channel,statusId){
  window.open(channel==="telegram"?tg:max,"_blank","noopener");
 }
 byId("pm-order-form").onsubmit=e=>{e.preventDefault();const val=id=>byId(id).value.trim();const msg=`Здравствуйте! Заявка с PAVEL DARK ARTIFACTS.\nРабота: ${val("pm-order-art")}\nИмя: ${val("pm-order-name")}\nГород: ${val("pm-order-city")}\nКонтакт: ${val("pm-order-contact")}\nКомментарий: ${val("pm-order-note")||"Нет"}\nПодскажите наличие, доставку и оплату.`;deliver(msg,val("pm-order-channel"),"pm-order-status")};
-byId("pm-review-form").onsubmit=e=>{e.preventDefault();const val=id=>byId(id).value.trim();const msg=`Здравствуйте! Отзыв для модерации на PAVEL DARK ARTIFACTS.\nАвтор: ${val("pm-review-name")}\nРабота: ${val("pm-review-art")}\nОценка: ${val("pm-review-rating")}/5\nОтзыв: ${val("pm-review-text")}\nЯ согласен(на) на публикацию текста и указанного имени после проверки.`;deliver(msg,val("pm-review-channel"),"pm-review-status")};
-async function refreshReviews(){try{const r=await fetch("./reviews.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const data=await r.json();if(!Array.isArray(data))throw Error("Invalid reviews");const list=byId("pm-review-list");list.replaceChildren();const visible=data.filter(x=>x&&x.published===true&&x.name&&x.text);for(const entry of visible){const box=document.createElement("div");box.className="pm-card";const stars=document.createElement("p");stars.style.color="#c8a772";stars.textContent="★".repeat(Math.max(1,Math.min(5,Number(entry.rating)||5)));const body=document.createElement("p");body.textContent=entry.text;body.className="pm-muted";const name=document.createElement("strong");name.textContent=entry.name+" · "+(entry.artwork||"Авторская работа");box.append(stars,body,name);list.append(box)}if(!visible.length){const empty=document.createElement("p");empty.className="pm-muted";empty.textContent="Первые отзывы появятся здесь после проверки. Будем рады вашему впечатлению!";list.append(empty)}}catch(e){byId("pm-review-list").textContent="Отзывы временно недоступны."}}
+const firebaseConfig={apiKey:"AIzaSyCOZXpnkgJdATABb6kuVWGF6j3OunHLI78",authDomain:"pm-dark-artifacts.firebaseapp.com",projectId:"pm-dark-artifacts",appId:"1:467232570292:web:8c5551e5a786a87c8510e1"};
+let firestorePromise;
+function getFirestore(){
+ if(!firestorePromise)firestorePromise=Promise.all([
+  import("https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js"),
+  import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js")
+ ]).then(([app,db])=>{
+  const instance=app.getApps().length?app.getApp():app.initializeApp(firebaseConfig);
+  return {db:db.getFirestore(instance),api:db};
+ });
+ return firestorePromise;
+}
+byId("pm-review-form").onsubmit=async e=>{
+ e.preventDefault();
+ const status=byId("pm-review-status"),button=byId("pm-review-submit");
+ const val=id=>byId(id).value.trim();
+ if(val("pm-review-website")){status.textContent="Спасибо!";return}
+ const name=val("pm-review-name"),artwork=val("pm-review-art"),text=val("pm-review-text"),rating=Number(val("pm-review-rating"));
+ if(name.length<2||name.length>60||artwork.length<1||artwork.length>100||text.length<10||text.length>1000||!Number.isInteger(rating)||rating<1||rating>5){status.textContent="Проверьте поля: имя 2–60, работа 1–100, отзыв 10–1000 символов.";return}
+ if(localStorage.getItem("pm-last-review")&&Date.now()-Number(localStorage.getItem("pm-last-review"))<60000){status.textContent="Подождите минуту перед повторной отправкой.";return}
+ button.disabled=true;status.textContent="Публикуем отзыв…";
+ try{
+  const {db,api}=await getFirestore();
+  await api.addDoc(api.collection(db,"reviews"),{name,artwork,text,rating,created_at:api.serverTimestamp()});
+  localStorage.setItem("pm-last-review",String(Date.now()));
+  status.textContent="Спасибо! Ваш отзыв опубликован.";
+  byId("pm-review-form").reset();
+  await refreshReviews();
+ }catch(err){console.error("Review publish error",err);status.textContent="Не удалось отправить отзыв. Проверьте соединение и попробуйте ещё раз."}
+ finally{button.disabled=false}
+};
+async function refreshReviews(){
+ const list=byId("pm-review-list");
+ try{
+  const {db,api}=await getFirestore();
+  const snap=await api.getDocs(api.collection(db,"reviews"));
+  const visible=snap.docs.map(d=>d.data()).filter(x=>x&&x.name&&x.text&&x.setup!=="ready").sort((a,b)=>(b.created_at?.seconds||0)-(a.created_at?.seconds||0)).slice(0,60);
+  list.replaceChildren();
+  for(const entry of visible){
+   const box=document.createElement("div");box.className="pm-card";
+   const stars=document.createElement("p");stars.style.color="#c8a772";stars.textContent="★".repeat(Math.max(1,Math.min(5,Number(entry.rating)||5)));
+   const body=document.createElement("p");body.textContent=entry.text;body.className="pm-muted";
+   const name=document.createElement("strong");name.textContent=entry.name+" · "+(entry.artwork||"Авторская работа");
+   box.append(stars,body,name);list.append(box)
+  }
+  if(!visible.length){const empty=document.createElement("p");empty.className="pm-muted";empty.textContent="Пока отзывов нет. Станьте первым!";list.append(empty)}
+ }catch(e){console.error("Review loading error",e);list.textContent="Отзывы временно недоступны. Попробуйте обновить страницу."}
+}
 refreshReviews();
 })();
