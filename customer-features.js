@@ -45,12 +45,17 @@ byId("pm-review-form").onsubmit=async e=>{
  if(val("pm-review-website")){status.textContent="Спасибо!";return}
  const name=val("pm-review-name"),artwork=val("pm-review-art"),text=val("pm-review-text"),rating=Number(val("pm-review-rating"));
  if(name.length<2||name.length>60||artwork.length<1||artwork.length>100||text.length<10||text.length>1000||!Number.isInteger(rating)||rating<1||rating>5){status.textContent="Проверьте поля: имя 2–60, работа 1–100, отзыв 10–1000 символов.";return}
+ const suspicious=/(https?:\\/\\/|www\\.|t\\.me\\/|wa\\.me\\/|@[a-z0-9_]{4,}|(?:\\+?\\d[\\d\\s()\\-]{8,}\\d))/i;
+ if(suspicious.test(name+" "+artwork+" "+text)){status.textContent="В отзыве нельзя размещать ссылки, номера телефонов и рекламные контакты.";return}
+ const normalized=text.toLocaleLowerCase().replace(/\\s+/g," ").trim();
+ if(normalized===localStorage.getItem("pm-last-review-text")){status.textContent="Этот отзыв уже был отправлен.";return}
  if(localStorage.getItem("pm-last-review")&&Date.now()-Number(localStorage.getItem("pm-last-review"))<60000){status.textContent="Подождите минуту перед повторной отправкой.";return}
  button.disabled=true;status.textContent="Публикуем отзыв…";
  try{
   const {db,api}=await getFirestore();
   await api.addDoc(api.collection(db,"reviews"),{name,artwork,text,rating,created_at:api.serverTimestamp()});
   localStorage.setItem("pm-last-review",String(Date.now()));
+  localStorage.setItem("pm-last-review-text",normalized);
   status.textContent="Спасибо! Ваш отзыв опубликован.";
   byId("pm-review-form").reset();
   await refreshReviews();
