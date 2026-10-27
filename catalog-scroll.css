@@ -6,3 +6,24 @@
 #works .pm-catalog-scroll::-webkit-scrollbar{width:7px}
 #works .pm-catalog-scroll::-webkit-scrollbar-thumb{background:#a68b64;border-radius:12px}
 @media(max-width:600px){#works .pm-catalog-scroll{max-height:590px;padding:8px;border-radius:10px}#works .pm-catalog-hint{font-size:12px}}
+
+/* Smaller artwork tiles and a shorter gallery window, without touching product dialogs. */
+#works .pm-catalog-scroll{max-height:570px;padding:9px}
+#works .pm-catalog-scroll #grid{gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
+#works .pm-catalog-scroll .photo{height:230px}
+#works .pm-catalog-scroll .meta{padding:13px;gap:5px;flex-wrap:wrap}
+#works .pm-catalog-scroll .meta h3{font-size:clamp(17px,2vw,23px);line-height:1.15}
+#works .pm-catalog-scroll .meta p{font-size:11px}
+@media(max-width:850px){
+ #works .pm-catalog-scroll{max-height:500px}
+ #works .pm-catalog-scroll #grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #works .pm-catalog-scroll .photo{height:205px}
+}
+@media(max-width:550px){
+ #works .pm-catalog-scroll{max-height:445px;padding:7px}
+ #works .pm-catalog-scroll #grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #works .pm-catalog-scroll .photo{height:165px}
+ #works .pm-catalog-scroll .meta{padding:10px 8px}
+ #works .pm-catalog-scroll .meta h3{font-size:17px}
+ #works .pm-catalog-scroll .status,#works .pm-catalog-scroll .price{font-size:11px}
+}
