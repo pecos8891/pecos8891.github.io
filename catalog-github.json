@@ -167,5 +167,25 @@
     "description": "Волибир из игры Лига Легенд \nВысокая детализация.\nПолностью покрашен вручную.",
     "available": true,
     "published": true
+  },
+  {
+    "id": "ba12c1ea-9f16-448f-91d1-04c6a528791e",
+    "image": "images/catalog-2dae3fbb-add6-472a-8c12-01f9de6b6cc4.jpg",
+    "gallery": [
+      "images/catalog-2dae3fbb-add6-472a-8c12-01f9de6b6cc4.jpg",
+      "images/catalog-3441230f-0aa9-4f9d-a01c-eedb718c6cb7.jpg",
+      "images/catalog-2a2c7e86-53f9-4ce5-9a92-92ad1a15f5d6.jpg",
+      "images/catalog-ac71853e-3def-46a9-9659-c1825e8c26cc.jpg",
+      "images/catalog-7df5b8a8-5f12-4939-8523-4a045a0ecf08.jpg",
+      "images/catalog-3d1c11dc-6ac5-4a05-9c36-cb5b27bf3f75.jpg"
+    ],
+    "title": "Орк Воин",
+    "category": "Фигурки",
+    "collection": "Орки",
+    "price": 2900,
+    "size": "16 х 12",
+    "description": "Орк воин из вселенной Warcraft \nВысокая детализация.\nПолность покрашен вручную",
+    "available": true,
+    "published": false
   }
 ]
