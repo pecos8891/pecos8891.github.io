@@ -206,5 +206,23 @@
     "description": "Орк друид из вселенной Warcraft \nВысокая детализация.\nПолностью покрашен вручную.",
     "available": true,
     "published": true
+  },
+  {
+    "id": "59babe51-a02c-460d-a244-b4901c6201a1",
+    "image": "images/catalog-eeb86a2f-ef7f-4395-ac09-9473fa86b48e.jpg",
+    "gallery": [
+      "images/catalog-eeb86a2f-ef7f-4395-ac09-9473fa86b48e.jpg",
+      "images/catalog-ca298db9-3c89-4678-a40f-2d5ba576f244.jpg",
+      "images/catalog-53d428e1-67f8-4643-98bf-2aa4036445b4.jpg",
+      "images/catalog-87f2d9dc-b4f3-4e6f-b14e-2f35bbc03935.jpg"
+    ],
+    "title": "Маска демона Они",
+    "category": "Маски",
+    "collection": "",
+    "price": 3000,
+    "size": "",
+    "description": "Маска демона Они.\nВысокая детализация.\nПокрашенна вручную.\nУдобное крепления на голову.",
+    "available": true,
+    "published": false
   }
 ]
