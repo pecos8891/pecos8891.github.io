@@ -224,5 +224,24 @@
     "description": "Маска демона Они.\nВысокая детализация.\nПокрашенна вручную.\nУдобное крепления на голову.",
     "available": true,
     "published": true
+  },
+  {
+    "id": "4c76d3c2-512b-403e-a834-ebb3ab659d74",
+    "image": "images/catalog-3261a7f0-0f99-4a51-adda-a742292e1f15.jpg",
+    "gallery": [
+      "images/catalog-3261a7f0-0f99-4a51-adda-a742292e1f15.jpg",
+      "images/catalog-fd50225a-2f61-4464-9729-cf826cc3285e.jpg",
+      "images/catalog-4f887b0a-8ffe-40d1-a581-84ee39630a21.jpg",
+      "images/catalog-3a3c534a-d7db-496c-9706-1a944c09c9dc.jpg",
+      "images/catalog-25caa24c-0334-46b6-858c-6c3c9fa84465.jpg"
+    ],
+    "title": "Ящерка из мема",
+    "category": "Игрушки",
+    "collection": "",
+    "price": 1300,
+    "size": "13 х 10",
+    "description": "Ящерка из мема.\nНа пружинке.\nПокрашена в ручную.\nВы можете выбрать любой цвет покраска.",
+    "available": true,
+    "published": false
   }
 ]
